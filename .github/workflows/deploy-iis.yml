@@ -21,12 +21,11 @@ jobs:
     - name: Build solution
       run: msbuild PartsUnlimited.sln /p:Configuration=Release
 
-    - name: Publish Web App
-      run: msbuild src/PartsUnlimitedWebsite/PartsUnlimitedWebsite.csproj `
-           /p:Configuration=Release `
-           /p:DeployOnBuild=true `
-           /p:WebPublishMethod=FileSystem `
-           /p:PublishDir=C:\inetpub\wwwroot\PartsUnlimitedGitHub
+    - name: Restart IIS Site
+      run: 
+        Import-Module WebAdministration -SkipEditionCheck
+        Stop-WebSite -Name "PartsUnlimitedGithubActions"
+        Start-WebSite -Name "PartsUnlimitedGithubActions"
 
     - name: Restart IIS Site
       run: |
