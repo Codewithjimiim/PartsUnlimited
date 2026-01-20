@@ -36,9 +36,3 @@ jobs:
             /p:WebPublishMethod=FileSystem `
             /p:PublishDir=C:\inetpub\wwwroot\PartsUnlimitedGithubActions
         shell: powershell
-
-      - name: Restart IIS Site
-        run: |
-          Import-Module WebAdministration -SkipEditionCheck
-          Stop-WebSite -Name "PartsUnlimitedGithubActions"
-          Start-WebSite -Name "PartsUnlimitedGithubActions"
