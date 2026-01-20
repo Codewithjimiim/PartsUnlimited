@@ -31,5 +31,5 @@ jobs:
     - name: Restart IIS Site
       run: |
         Import-Module WebAdministration
-        Stop-WebSite -Name "PartsUnlimited"
-        Start-WebSite -Name "PartsUnlimited"
+        Stop-WebSite -Name "PartsUnlimitedGitHubActions"
+        Start-WebSite -Name "PartsUnlimitedGitHubActions"
