@@ -9,20 +9,42 @@ jobs:
   build-and-deploy:
     runs-on: windows-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v2
+      # Step 2: Setup MSBuild
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
 
-    - name: Restore NuGet packages
-      run: nuget restore PartsUnlimited.sln
+      # Step 3: Restore NuGet packages
+      - name: Restore NuGet packages
+        run: nuget restore PartsUnlimited.sln
+        shell: powershell
 
-    - name: Build solution
-      run: msbuild PartsUnlimited.sln /p:Configuration=Release
+      # Step 4: Build the solution
+      - name: Build solution
+        run: msbuild PartsUnlimited.sln /p:Configuration=Release
+        shell: powershell
 
-    - name: Restart IIS Site
-      run: 
-        Import-Module WebAdministration
-        Stop-WebSite -Name "PartsUnlimitedGitHubActions"
-        Start-WebSite -Name "PartsUnlimitedGitHubActions"
+      # Step 5: Publish the web app to IIS folder
+      - name: Publish Web App to IIS
+        run: |
+          msbuild src/PartsUnlimitedWebsite/PartsUnlimitedWebsite.csproj `
+            /p:Configuration=Release `
+            /p:DeployOnBuild=true `
+            /p:WebPublishMethod=FileSystem `
+            /p:PublishDir=C:\inetpub\wwwroot\PartsUnlimitedGithubActions
+        shell: powershell
+
+      # Step 6: Restart IIS site safely
+      - name: Restart IIS Site
+        run: |
+          Import-Module WebAdministration -SkipEditionCheck
+          if (Test-Path IIS:\Sites\PartsUnlimitedGithubActions) {
+              Stop-WebSite -Name "PartsUnlimitedGithubActions"
+              Start-WebSite -Name "PartsUnlimitedGithubActions"
+          } else {
+              Write-Host "Site 'PartsUnlimitedGithubActions' does not exist. Skipping restart."
+          }
+        shell: powershell
