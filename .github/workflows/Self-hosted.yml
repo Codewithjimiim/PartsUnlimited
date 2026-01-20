@@ -1,0 +1,38 @@
+name: Build and Deploy to IIS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Setup MSBuild
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      # Step 3: Restore NuGet packages
+      - name: Restore NuGet packages
+        run: nuget restore PartsUnlimited.sln
+        shell: powershell
+
+      # Step 4: Build the solution
+      - name: Build solution
+        run: msbuild PartsUnlimited.sln /p:Configuration=Release
+        shell: powershell
+
+      # Step 5: Publish the web app to IIS folder
+      - name: Publish Web App to IIS
+        run: |
+          msbuild src/PartsUnlimitedWebsite/PartsUnlimitedWebsite.csproj `
+            /p:Configuration=Release `
+            /p:DeployOnBuild=true `
+            /p:WebPublishMethod=FileSystem `
+            /p:PublishDir=C:\inetpub\wwwroot\PartsUnlimitedGithubActions
+        shell: powershell
