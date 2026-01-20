@@ -23,12 +23,6 @@ jobs:
 
     - name: Restart IIS Site
       run: 
-        Import-Module WebAdministration -SkipEditionCheck
-        Stop-WebSite -Name "PartsUnlimitedGithubActions"
-        Start-WebSite -Name "PartsUnlimitedGithubActions"
-
-    - name: Restart IIS Site
-      run: |
         Import-Module WebAdministration
         Stop-WebSite -Name "PartsUnlimitedGitHubActions"
         Start-WebSite -Name "PartsUnlimitedGitHubActions"
