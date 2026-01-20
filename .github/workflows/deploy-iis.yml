@@ -26,7 +26,7 @@ jobs:
            /p:Configuration=Release `
            /p:DeployOnBuild=true `
            /p:WebPublishMethod=FileSystem `
-           /p:PublishDir=C:\inetpub\wwwroot\PartsUnlimited1
+           /p:PublishDir=C:\inetpub\wwwroot\PartsUnlimitedGitHub
 
     - name: Restart IIS Site
       run: |
