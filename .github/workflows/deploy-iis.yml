@@ -37,14 +37,8 @@ jobs:
             /p:PublishDir=C:\inetpub\wwwroot\PartsUnlimitedGithubActions
         shell: powershell
 
-      # Step 6: Restart IIS site safely
       - name: Restart IIS Site
         run: |
           Import-Module WebAdministration -SkipEditionCheck
-          if (Test-Path IIS:\Sites\PartsUnlimitedGithubActions) {
-              Stop-WebSite -Name "PartsUnlimitedGithubActions"
-              Start-WebSite -Name "PartsUnlimitedGithubActions"
-          } else {
-              Write-Host "Site 'PartsUnlimitedGithubActions' does not exist. Skipping restart."
-          }
-        shell: powershell
+          Stop-WebSite -Name "PartsUnlimitedGithubActions"
+          Start-WebSite -Name "PartsUnlimitedGithubActions"
